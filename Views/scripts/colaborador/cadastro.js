@@ -25,7 +25,7 @@ async function submit(event) {
     const data = {
         Nome: $('#nome').val(),
         Salario: $('#salario').val(),
-        id_cargo: $('#cargo option:selected').val()
+        idCargo: $('#cargo option:selected').val()
     };
 
     await fetch('http://localhost:5000/Colaborador/Store',
