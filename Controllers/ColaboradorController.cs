@@ -1,9 +1,10 @@
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using projetoTeste.Models;
 using Microsoft.EntityFrameworkCore;
+using projetoTeste.Models;
 
 namespace projetoTeste.Controllers
 {
@@ -53,15 +54,34 @@ namespace projetoTeste.Controllers
                    }
                }).ToList();
         }
+
+
+        public Colaborador GetById(int id)
+        {
+            return selecteQuery().FirstOrDefault(c => c.Id == id);
+        }
+
         [HttpPost]
-        public List<Colaborador> Store(Models.Colaborador model)
+        public Colaborador Store([FromBody] Models.Colaborador model)
         {
             contexto.Colaborador.Add(model);
             contexto.SaveChanges();
 
-            return new List<Colaborador> { model };
+            return this.GetById(model.Id);
         }
+        [HttpDelete]
+        public string Delete([FromBody] int id)
+        {
+            Colaborador dados = contexto.Colaborador.FirstOrDefault(c => c.Id == id);
+            if (dados == null)
+            {
+                return "Registro não encontrado!";
+            }
 
+            contexto.Remove(dados);
+            contexto.SaveChanges();
+            return "Registo Apagado com sucesso!";
+        }
         private IQueryable<Colaborador> selecteQuery()
         {
             return contexto.Colaborador.Include(c => c.IdCargoNavigation).OrderBy(c => c.Nome).Select

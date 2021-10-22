@@ -20,15 +20,15 @@ function listarCargo() {
         });
 }
 
-async function submit(event) {
-
+function submit(event) {
+    event.preventDefault();
     const data = {
         Nome: $('#nome').val(),
         Salario: $('#salario').val(),
         idCargo: $('#cargo option:selected').val()
     };
 
-    await fetch('http://localhost:5000/Colaborador/Store',
+    fetch('http://localhost:5000/Colaborador/Store',
         {
             method: "POST",
             body: JSON.stringify(data),
@@ -36,10 +36,10 @@ async function submit(event) {
                 'Content-Type': 'application/json'
             }
         })
-        .then(res => res.json())
-        .then(json => renderTable(json))
+        .then(async res => await res.json())
+        .then(json => renderTable([json]))
         .catch(error => console.log(error));
-    event.preventDefault();
+
 }
 
 function filtrar(event) {
