@@ -22,6 +22,7 @@
                 <div class="card d-flex aling-center">
                     <div class="card-body">
                         <form id="formulario" autocomplete="off">
+                            <input type="hidden" value="" id="id" name="id">
                             <div class="row">
                                 <div class="col-md-5 col-lg-5 p-2">
                                     <label>Nome:</label>
@@ -51,62 +52,97 @@
         </div>
         <hr />
         <div class="row">
-            <div class="accordion" id="filtre">
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="filtre-headingOne">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#filtre-collapseOne" aria-expanded="true"
-                            aria-controls="filtre-collapseOne">
-                            Filtros
-                        </button>
-                    </h2>
-                    <div id="filtre-collapseOne" class="accordion-collapse collapse show"
-                        aria-labelledby="filtre-headingOne">
-
-                        <div class="accordion-body">
-                            <div class="row">
-                                <div class="col-md-5 col-lg-5 p-2">
-                                    <label>Buscar Nome:</label>
-                                    <input class="form-control" id="f_nome" name="f_nome" type="text">
+            <fieldset>
+                <div class="accordion" id="filtre">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="filtre-headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#filtre-collapseOne" aria-expanded="true"
+                                aria-controls="filtre-collapseOne">
+                                Filtros
+                            </button>
+                        </h2>
+                        <div id="filtre-collapseOne" class="accordion-collapse collapse show"
+                            aria-labelledby="filtre-headingOne">
+    
+                            <div class="accordion-body">
+                                <div class="row">
+                                    <div class="col-md-5 col-lg-5 p-2">
+                                        <label>Buscar Nome:</label>
+                                        <input class="form-control" id="f_nome" name="f_nome" type="text">
+                                    </div>
+                                    <div class="col-md-5 col-lg-5 p-2">
+                                        <label>Buscar Cargo:</label>
+                                        <select class="form-control" id="f_cargo" name="f_cargo">
+                                            <option value="">Selecione o Cargo</option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="col-md-5 col-lg-5 p-2">
-                                    <label>Buscar Cargo:</label>
-                                    <select class="form-control" id="f_cargo" name="f_cargo">
-                                        <option value="">Selecione o Cargo</option>
-                                    </select>
+                                <div class="accordion-foot text-center">
+                                    <button id="filtro" class="btn btn-info text-white">Filtrar</button>
+                                    <button id="limpar" class="btn btn-danger text-white">Limpar</button>
                                 </div>
                             </div>
-                            <div class="accordion-foot text-center">
-                                <button id="filtro" class="btn btn-info text-white">Filtrar</button>
-                                <button id="limpar" class="btn btn-danger text-white">Limpar</button>
-                            </div>
+    
                         </div>
-
                     </div>
                 </div>
-            </div>
+            </fieldset>
+           
         </div>
         <div class="row mt-5">
             <div class="col-md-12">
-                <label>Colaboradores Cadastrados</label>
-                <div class="table-responsive">
-                    <table role="grid" id="table" class="table table-hover table-grid table-sm">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th style="cursor: pointer;" onclick="sortTable(event,1)">NOME <i
-                                        class="bi bi-chevron-down"></i></th>
-                                <th style="cursor: pointer;" onclick="sortTable(event,2)">CARGO <i
-                                        class="bi bi-chevron-down"></i></th>
-                                <th>SALARIO</th>
-                                <th colspan="2">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="grid">
 
-                        </tbody>
-                    </table>
-                </div>
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link active" id="_actived-tab" data-bs-toggle="tab" data-bs-target="#_actived" type="button" role="tab" aria-controls="_actived" aria-selected="true">Ativos</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link" id="_deleted-tab" data-bs-toggle="tab" data-bs-target="#_deleted" type="button" role="tab" aria-controls="_deleted" aria-selected="false">Inativos</button>
+                    </li>
+                  </ul>
+                  <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="_actived" role="tabpanel" aria-labelledby="ative-tab">
+                        <div class="table-responsive">
+                            <table role="grid" id="table" class="table table-hover table-grid table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th style="cursor: pointer;" onclick="sortTable(event,1)">NOME <i
+                                                class="bi bi-chevron-down"></i></th>
+                                        <th style="cursor: pointer;" onclick="sortTable(event,2)">CARGO <i
+                                                class="bi bi-chevron-down"></i></th>
+                                        <th>SALARIO</th>
+                                        <th colspan="3">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="grid">
+        
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="_deleted" role="tabpanel" aria-labelledby="delete-tab">
+                        <table role="grid" id="table" class="table table-hover table-grid table-sm">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th style="cursor: pointer;" onclick="sortTable(event,1)">NOME <i
+                                            class="bi bi-chevron-down"></i></th>
+                                    <th style="cursor: pointer;" onclick="sortTable(event,2)">CARGO <i
+                                            class="bi bi-chevron-down"></i></th>
+                                    <th>SALARIO</th>
+                                    <th>Desativado em</th>
+                                    <th colspan="2">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="grid_inativos">
+    
+                            </tbody>
+                        </table>
+
+                    </div>
+                  </div>
             </div>
         </div>
     </div>

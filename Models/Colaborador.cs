@@ -6,6 +6,7 @@ namespace projetoTeste.Models
     {
         public int Id { get; set; }
         public string Nome { get; set; }
+        public string? Deleteat { get; set; }
         public float Salario { get; set; }
 
         public int IdCargo { get; set; }
