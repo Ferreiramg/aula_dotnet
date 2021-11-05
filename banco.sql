@@ -23,6 +23,7 @@ INSERT INTO colaborador (nome, salario) VALUES ('Radia Perlman', 3657.5);
 INSERT INTO colaborador (nome, salario) VALUES ('Grace Hopper', 4180);
 
 ALTER TABLE cargo ADD tipo CHAR(1) NOT NULL;
+ALTER TABLE cargo ADD deleted_at VARCHAR(25);
 ALTER TABLE cargo ADD salario_minimo FLOAT NOT NULL;
 ALTER TABLE cargo ADD salario_maximo FLOAT NOT NULL;
 
@@ -34,6 +35,7 @@ UPDATE cargo SET tipo = 'D', salario_minimo = 4702.5, salario_maximo = 5747.5 WH
 UPDATE cargo SET tipo = 'D', salario_minimo = 6270, salario_maximo = 7315 WHERE nome = 'Desenvolvedor Sênior';
 
 ALTER TABLE colaborador ADD id_cargo INT;
+ALTER TABLE colaborador ADD deleted_at VARCHAR(25);
 ALTER TABLE colaborador ADD FOREIGN KEY (id_cargo) REFERENCES cargo(id);
 
 UPDATE colaborador SET id_cargo = 6 WHERE nome = 'Alan Turing';

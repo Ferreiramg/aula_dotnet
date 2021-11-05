@@ -1,5 +1,6 @@
 
 using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
@@ -33,11 +34,39 @@ namespace projetoTeste.Controllers
 
             return this.Listar();
         }
+        [HttpGet]
+        public List<Colaborador> ListarInativos()
+        {
+            return contexto.Colaborador.Include(c => c.IdCargoNavigation)
+            .Where(c => c.Deleteat != null)
+            .OrderBy(c => c.Nome)
+            .Select
+           (
+               c => new Colaborador
+               {
+                   Id = c.Id,
+                   Nome = c.Nome,
+                   Salario = c.Salario,
+                   Deleteat = c.Deleteat,
+                   IdCargoNavigation = new Cargo
+                   {
+                       Id = c.IdCargoNavigation.Id,
+                       Nome = c.IdCargoNavigation.Nome,
+                       Tipo = c.IdCargoNavigation.Tipo,
+                       SalarioMinimo = c.IdCargoNavigation.SalarioMinimo,
+                       SalarioMaximo = c.IdCargoNavigation.SalarioMaximo
+                   }
+               }).ToList();
+        }
+
 
         [HttpGet]
         public List<Colaborador> Listar()
         {
-            return contexto.Colaborador.Include(c => c.IdCargoNavigation).OrderBy(c => c.Nome).Select
+            return contexto.Colaborador.Include(c => c.IdCargoNavigation)
+            .Where(c => c.Deleteat == null)
+            .OrderBy(c => c.Nome)
+            .Select
            (
                c => new Colaborador
                {
@@ -69,6 +98,14 @@ namespace projetoTeste.Controllers
 
             return this.GetById(model.Id);
         }
+        [HttpPut]
+        public Colaborador Update([FromBody] Models.Colaborador model)
+        {
+            contexto.Colaborador.Update(model);
+            contexto.SaveChanges();
+
+            return this.GetById(model.Id);
+        }
         [HttpDelete]
         public string Delete([FromBody] int id)
         {
@@ -79,6 +116,34 @@ namespace projetoTeste.Controllers
             }
 
             contexto.Remove(dados);
+            contexto.SaveChanges();
+            return "Registo Apagado com sucesso!";
+        }
+        [HttpPut]
+        public string Restaurar([FromBody] int id)
+        {
+            Colaborador dados = contexto.Colaborador.FirstOrDefault(c => c.Id == id);
+            if (dados == null)
+            {
+                return "Registro não encontrado!";
+            }
+            dados.Deleteat = null;
+            contexto.Update(dados);
+            contexto.SaveChanges();
+            return "Restaurado com sucesso!";
+        }
+        [HttpDelete]
+        public string DeleteLogic([FromBody] int id)
+        {
+            Colaborador dados = contexto.Colaborador.FirstOrDefault(c => c.Id == id);
+            if (dados == null)
+            {
+                return "Registro não encontrado!";
+            }
+            DateTime localDate = DateTime.Now;
+            dados.Deleteat = localDate.ToString(new CultureInfo("pt-BR"));
+
+            contexto.Update(dados);
             contexto.SaveChanges();
             return "Registo Apagado com sucesso!";
         }

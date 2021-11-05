@@ -42,7 +42,7 @@ namespace projetoTeste.Models
                 entity.Property(e => e.SalarioMaximo).HasColumnName("salario_maximo");
 
                 entity.Property(e => e.SalarioMinimo).HasColumnName("salario_minimo");
-
+                entity.Property(e => e.Deleteat).HasColumnName("deleted_at");
                 entity.Property(e => e.Tipo)
                     .IsRequired()
                     .HasColumnName("tipo")
@@ -67,6 +67,7 @@ namespace projetoTeste.Models
                     .HasMaxLength(100);
 
                 entity.Property(e => e.Salario).HasColumnName("salario");
+                entity.Property(e => e.Deleteat).HasColumnName("deleted_at");
 
                 entity.HasOne(d => d.IdCargoNavigation)
                     .WithMany(p => p.Colaborador)

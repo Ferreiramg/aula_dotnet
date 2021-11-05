@@ -19,18 +19,95 @@ function listarCargo() {
             alert(mensagem + ': ' + excecao);
         });
 }
+/* ACTIONS */
+const apagar = (event) => {
+    let id = $(event.target).data('id');
 
+    if (confirm(`Deseja Realment Excluir o registro [${id}]?`))
+        fetch('http://localhost:5000/Colaborador/DeleteLogic',
+            {
+                method: "DELETE",
+                body: JSON.stringify(id),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(async (res) => await res.text())
+            .then(text => {
+                $(event.target).closest('tr').remove();
+            })
+            .catch(error => console.log(error));
+}
+
+const editar = (event) => {
+    let dados = $(event.target).data('src');
+
+    console.log(dados);
+    $('#nome').val(dados.nome);
+    $('#salario').val(dados.salario);
+    $('#cargo').val(dados.idCargoNavigation.id);
+    $('#id').val(dados.id);
+
+}
+const restaurar = (event) => {
+    let id = $(event.target).data('id');
+
+    event.preventDefault();
+    if (confirm(`Deseja Realment Restaurar o Registro [${id}]?`))
+        fetch('http://localhost:5000/Colaborador/Restaurar',
+            {
+                method: 'PUT',
+                body: JSON.stringify(id),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(async res => await res.text())
+            .then(message => {
+                alert(message);
+                limpar();
+            })
+            .catch(error => console.log(error));
+
+}
+
+const ver = (event) => {
+
+    let id = $(event.target).data('id');
+    const selectorModal = document.getElementById('exampleModal');
+    const Modal = new bootstrap.Modal(selectorModal);
+    Modal.show();
+
+    fetch('http://localhost:5000/Colaborador/GetById?id=' + id)
+        .then(async (res) => await res.json())
+        .then(json => {
+            $(selectorModal).find('.modal-body').html(
+                `<ul>
+                    <li>${json.id}</li>
+                    <li>${json.nome}</li>
+                    <li>${json.salario.currency()}</li>
+                    <li>${json.idCargoNavigation.nome}</li>
+                </ul>`
+            );
+        })
+        .catch(error => console.log(error));
+}
 function submit(event) {
     event.preventDefault();
+    let id = $('#id').val();
     const data = {
         Nome: $('#nome').val(),
         Salario: $('#salario').val(),
-        idCargo: $('#cargo option:selected').val()
-    };
+        idCargo: $('#cargo option:selected').val(),
 
-    fetch('http://localhost:5000/Colaborador/Store',
+    };
+    if (id) {
+        data.id = id;
+    }
+
+    fetch(id ? 'http://localhost:5000/Colaborador/Update' : 'http://localhost:5000/Colaborador/Store',
         {
-            method: "POST",
+            method: id ? 'PUT' : "POST",
             body: JSON.stringify(data),
             headers: {
                 'Content-Type': 'application/json'
@@ -38,6 +115,7 @@ function submit(event) {
         })
         .then(async res => await res.json())
         .then(json => renderTable([json]))
+        .then(json => { $('form')[0].reset(); $('#id').val() })
         .catch(error => console.log(error));
 
 }
